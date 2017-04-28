@@ -1,0 +1,56 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul side-navigation class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+
+                <div class="profile-element" uib-dropdown>
+                    <img alt="image" class="img-circle" src="{{profpict}}" style="width:50px;"/>
+                    <a uib-dropdown-toggle href>
+                            <span class="clear">
+                                <span class="block m-t-xs">
+                                    <strong class="font-bold">{{user_name}}</strong>
+                             </span>
+                                <span class="text-muted text-xs block">Settings <b class="caret"></b></span>
+                            </span>
+                    </a>
+                    <ul uib-dropdown-menu class="animated fadeInRight m-t-xs">
+                        <li><a ui-sref="app.profile">Profile</a></li>
+                        <li class="divider"></li>
+                        <li><a ui-sref="logout">Logout</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    IN+
+                </div>
+            </li>
+           <li ng-class="{active: $state.includes('finddorm')}">
+                <a ui-sref="finddorm.maps"><i class="fa fa-map-marker"></i> <span class="nav-label">Find Dorm</span> </a>
+            </li>
+			<li ng-class="{active: $state.includes('mybooking')}" ng-if="isUser()">
+                <a ui-sref="mybooking.booking"><i class="fa fa-bookmark"></i> <span class="nav-label">My Booking</span> </a>
+            </li>
+			<li ui-sref-active="active" ng-if="isDp()">
+                <a ui-sref="dp.dormitory"><i class="fa fa-home"></i> <span class="nav-label">My Dormitory</span> </a>
+            </li>
+			<li ui-sref-active="active" ng-if="isDp()">
+                <a ui-sref="dp.viewbooking"><i class="fa fa-bookmark"></i> <span class="nav-label">View Booking</span> </a>
+            </li>
+			<li ng-class="{active: $state.includes('admin')}" ng-if="isAdmin()">
+                <a href=""><i class="fa fa-files-o"></i> <span class="nav-label">Admin Panel</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('admin')}">
+                    <li ui-sref-active="active"><a ui-sref="admin.user">User</a></li>
+                </ul>
+				<ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('admin')}">
+                    <li ui-sref-active="active"><a ui-sref="admin.dorm_provider">Dorm Provider</a></li>
+                </ul>
+				<ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('admin')}">
+                    <li ui-sref-active="active"><a ui-sref="admin.dormitory">Dormitory</a></li>
+                </ul>
+				<ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('admin')}">
+                    <li ui-sref-active="active"><a ui-sref="admin.booking">Booking</a></li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</nav>

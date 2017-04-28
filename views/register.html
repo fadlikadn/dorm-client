@@ -1,0 +1,56 @@
+
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">FDa</h1>
+
+        </div>
+        <h3>Register to FDa</h3>
+        <p>Create account to see it in action.</p>
+        <form class="m-t" role="form" ng-submit="register()">
+            <div class="form-group text-left">
+				<label>Name</label>
+                <input type="text" class="form-control" ng-model="name" required="">
+            </div>
+			<div class="form-group text-left">
+				<label>Username</label>
+                <input type="text" class="form-control" ng-model="username" required="">
+            </div>
+			<div ng-class="{'form-group':true, 'text-left':true, 'has-error': passwordError==true}">
+				<label>Password</label>
+                <input type="password" class="form-control" ng-model="password" required="">
+            </div>
+			<div ng-class="{'form-group':true, 'text-left':true, 'has-error': repasswordError==true}">
+				<label>Repeat Password</label>
+                <input type="password" class="form-control" ng-model="repassword" required="">
+            </div>
+            <div class="form-group text-left">
+				<label>Email</label>
+                <input type="email" class="form-control" ng-model="email" required="">
+            </div>
+			<div class="form-group text-left">
+				<label>Phone</label>
+                <input type="text" class="form-control" ng-model="phone" required="">
+            </div>
+			<div class="form-group text-left">
+				<label>Birthdate</label>
+                <input type="text" class="form-control" ng-model="birthdate.value" date-time view="date" auto-close="true" min-view="date" format="YYYY-MM-DD" required="">
+            </div>
+			<div class="form-group text-left">
+				<label>Type</label>
+                <select class="form-control" ng-model="type" required="">
+					<option ng-repeat="usertype in userTypes" value="{{usertype.id}}">
+					  {{usertype.name}}
+					</option>
+				</select>
+            </div>
+			
+            <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
+
+            <p class="text-muted text-center"><small>Already have an account?</small></p>
+            <a class="btn btn-sm btn-white btn-block" ui-sref="login">Login</a>
+        </form>
+        <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small> </p>
+    </div>
+</div>

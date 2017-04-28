@@ -1,0 +1,202 @@
+<style>
+.angular-google-map-container { height: 200px; }
+.time-slot               {  }
+
+/* hide the checkbox itself - the label will be styled */
+.time-slot input     { 
+  display:none; 
+}
+
+/* default styling for our labels */
+.time-slot label     { 
+  padding:10px 20px; 
+  color:#FFF; 
+  cursor:pointer; 
+  background:#EEE; 
+  border-radius:5px; 
+  transition:0.3s ease all;
+}
+
+/* if the label is checked and disabled */
+.time-slot input:disabled:checked ~ label { 
+  background:#f2dede; 
+  cursor:not-allowed;
+  animation:flashBooked 0.5s ease; 
+}
+
+/* if the label is checked */
+.time-slot input:checked ~ label { 
+  background:#1a51a8; 
+  animation:flashSelect 0.5s ease; 
+}
+
+/* if the label is not checked */
+.time-slot input:not(:checked) ~ label { 
+  background:#6AB074; 
+  animation:flashAvailable 0.5s ease; 
+}
+
+/* animation for the time slot to flash blue */
+@keyframes flashBooked {
+  0%, 100%  { background:#f2dede; transform:scale(1); }
+  50%       { background:#F99090; transform:scale(1.5); }
+}
+
+/* animation for the time slot to flash blue */
+@keyframes flashSelect {
+  0%, 100%  { background:#1a51a8; transform:scale(1); }
+  50%       { background:#2369db; transform:scale(1.5); }
+}
+
+/* animation for the time slot to flash green */
+@keyframes flashAvailable {
+  0%, 100%  { background:#6AB074; transform:scale(1); }
+  50%       { background:rgb(119, 218, 78); transform:scale(1.5); }
+}
+</style>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Dormitory</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a>{{dorm.dormProvider}}</a>
+            </li>
+            <li class="active">
+                <strong>{{dorm.title}}</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-9">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="ibox">
+				<div class="ibox-content">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="m-b-md">
+								<a ng-if="checkBook(dorm.status)" href="" class="btn btn-white btn-xs pull-right" ng-click="bookDormForm()">Book this Dorm</a>
+								<a ng-if="isDormOwner(dorm.usernameDP)" href="" class="btn btn-white btn-xs pull-right" ng-click="uploadForm()">Upload Photo</a>
+								<h2>{{dorm.title}} <span class="label"  ng-class="{'label-warning': currentRate<3, 'label-info': currentRate>=3 && currentRate<4, 'label-success': currentRate>=4}">{{currentRate}}</span></h2>
+								<uib-rating ng-model="rate" max="max" data-readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three','four','five']" aria-labelledby="default-rating"></uib-rating>
+								<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+								
+							</div>
+							<dl class="dl-horizontal">
+								<dt>Status:</dt>
+								<dd><span class="label label-primary">{{dorm.status_value}}</span></dd>
+							</dl>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-5">
+							<dl class="dl-horizontal">
+
+								<dt>Price:</dt><dd>Rp. {{dorm.price}},-/month</dd>
+								<dt>Number of Room:</dt><dd>{{dorm.number_of_room}}</dd>
+								<dt>Address:</dt><dd>{{dorm.address}}</dd>
+								<dt>Phone:</dt><dd>{{dorm.telp}}</dd>
+								<dt>Description:</dt><dd>{{dorm.description}}</dd>
+							</dl>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<uib-carousel interval="carousel.internval">
+								<uib-slide ng-repeat="photo in dorm.photos">
+									<img ng-src="{{photo.name}}" style="margin:auto;">
+									
+									<div class="carousel-caption">
+										<p>{{photo.caption}}</p>
+										<p><a ng-if="isDormOwner(photo.dp_username)" ng-click="deletePhoto(photo.id,$index)">delete</a></p>
+									</div>
+								</uib-slide>
+							</uib-carousel>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3">
+		<div class="wrapper wrapper-content project-manager">
+			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" options="map.options">
+				<ui-gmap-marker coords="marker.coords" icon="map.icon" options="marker.options" events="marker.events" idkey="marker.id">
+				</ui-gmap-marker>
+			</ui-gmap-google-map>
+		</div>
+	</div>
+</div>
+<script type="text/ng-template" id="bookDorm">
+	<div class="inmodal">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">Booking Dormitory</h4>
+		</div>
+		<div class="modal-body" ng-if="ajaxLoading">
+			<div class="sk-spinner sk-spinner-rotating-plane"></div>
+		</div>
+		<form ng-if="!ajaxLoading" class="form-horizontal" role="form" ng-submit="submitBook()">
+			<div class="modal-body">
+					<div class="form-group"><label class="col-lg-2 control-label">Periode</label>
+						<div class="col-lg-10"><input date-range-picker class="form-control date-picker" type="text" ng-model="$parent.daterange" options="options" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-lg-2 control-label">Select Room</label>
+						<div class="col-lg-10">
+								<div class="times">
+									<div class="col-xs-4 text-center" ng-repeat="room in rooms">
+										<div class="time-slot">       
+											<input type="checkbox" ng-attr-id="{{ 'room-' + room.id }}" ng-click="selectRoom(room)" ng-disabled="room.booked" ng-checked="room.booked">
+											<label for="{{ 'room-' + room.id }}">
+												{{room.title}}
+												<h5 ng-if="room.booked">Booked</h5>
+												<h5 ng-if="room.available">Available</h5>
+												<h5 ng-if="room.selected">Selected</h5>
+											</label>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-sm-2 control-label">Description</label>
+						<div class="col-sm-10"><textarea class="form-control" ng-model="$parent.description"></textarea></div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</script>
+
+<script type="text/ng-template" id="uploadPhoto">
+	<div class="inmodal">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">Upload Photo</h4>
+		</div>
+		<form class="form-horizontal" name="form" role="form" ng-submit="submitFile()">
+			<div class="modal-body">
+					<div class="form-group"><label class="col-lg-2 control-label">File</label>
+						<div class="col-lg-10">
+							<input type="file" class="form-control" ngf-select="" ng-model="file" name="file" ngf-accept="'image/*'" required="">
+						</div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-lg-2 control-label">Caption</label>
+						<div class="col-lg-10"><input type="text" class="form-control" ng-model="caption" required=""></div>
+					</div>
+					
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</script>
+

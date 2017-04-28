@@ -1,0 +1,45 @@
+<style>
+.angular-google-map-container { height: 500px; }
+</style>
+<div class="wrapper wrapper-content animated fadeIn">
+
+    <div class="p-w-md m-t-sm">
+		<div class="row">
+			<div class="col-sm-12">
+				<input type="text" class="form-control" vs-google-autocomplete
+                 
+					ng-model="address.name"
+					vs-latitude="address.lat"
+					vs-longitude="address.long"
+					vs-place="address.detail "
+				placeholder="Search Address...">
+			</div>
+		</div>
+        <div class="row">
+
+            <div class="col-sm-12">
+					<ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events" bounds="map.bounds">
+						<ui-gmap-markers dorebuildall="true" models="listMarkers" coords="'self'" icon="map.icon" options="markerOptions"  click="onClick">
+							<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show">
+								<div>
+									<h4>{{marker.title}}</h4>
+									Address : {{marker.address}}<br>
+									Price : Rp {{marker.price}},-/month<br>
+									Telp : {{marker.telp}}<br>
+									Provider : {{marker.dormProvider}}<br>
+									Status : {{marker.status_value}}<br>
+									Description : {{marker.description}}<br><br>
+									<button type="button" ng-click="$parent.detailDorm('{{marker.id}}')" class="btn btn-primary btn-xs">DETAIL DORM</button>
+								</div>
+							</ui-gmap-window>
+						</ui-gmap-markers>
+						
+					</ui-gmap-google-map>
+
+            </div>
+            
+        </div>
+    </div>
+
+
+</div>

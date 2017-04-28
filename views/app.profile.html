@@ -1,0 +1,154 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Profile</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="dashboards.maps">Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>Profile</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+	<div class="col-lg-9">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="ibox">
+				<div class="ibox-content">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="m-b-md">
+								<a href="" class="btn btn-white btn-xs pull-right" ng-click="editProfileForm()">Edit profile</a>
+
+								<h2>{{user.name}}</h2>
+							</div>
+							<dl class="dl-horizontal">
+								<dt>Type:</dt>
+								<dd><span class="label label-primary">{{user.user_type}}</span></dd>
+							</dl>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-5">
+							<dl class="dl-horizontal">
+
+								<dt>Username:</dt><dd>{{user.username}}</dd>
+								<dt>Email:</dt><dd>{{user.email}}</dd>
+								<dt>Phone:</dt><dd>{{user.phone}}</dd>
+								<dd><a class="text-navy" ng-click="changePasswordForm()"> Change Password</a></dd>
+								<dt>Birthdate:</dt><dd>{{user.birthdate}}</dd>
+							</dl>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3">
+		<div class="wrapper wrapper-content project-manager">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<img alt="image" class="img-circle" src="{{user.profpict}}" style="width:100%;"/>
+					<div class="hr-line-dashed"></div>
+					<button class="btn btn-primary btn-block" ng-click="changeProfpict()">Change Profile Picture</button>
+					<div class="hr-line-dashed"></div>
+					
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/ng-template" id="editProfile">
+	<div class="inmodal">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">Edit Profile</h4>
+		</div>
+		<form class="form-horizontal" role="form" ng-submit="editsave()">
+			<div class="modal-body">
+				
+					<div class="form-group"><label class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-10"><input type="text" class="form-control" ng-model="name" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-sm-2 control-label">Username</label>
+						<div class="col-sm-10"><input type="text" disabled="" class="form-control" ng-model="username" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-sm-2 control-label">Email</label>
+						<div class="col-sm-10"><input type="email" class="form-control" ng-model="email" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-sm-2 control-label">Phone</label>
+						<div class="col-sm-10"><input type="text" class="form-control" ng-model="phone" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group"><label class="col-lg-2 control-label">Birthdate</label>
+						<div class="col-lg-10"><input type="text" class="form-control" ng-model="birthdate.value" date-time view="date" auto-close="true" min-view="date" format="YYYY-MM-DD" required=""></div>
+					</div>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</script>
+
+<script type="text/ng-template" id="changePassword">
+	<div class="inmodal">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">Edit Profile</h4>
+		</div>
+		<form class="form-horizontal" role="form" ng-submit="changepassword()">
+			<div class="modal-body">
+				
+					<div class="form-group"><label class="col-sm-2 control-label">Current Password</label>
+						<div class="col-sm-10"><input type="password" class="form-control" ng-model="oldpassword" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div ng-class="{'form-group':true, 'has-error': newPasswordError==true}"><label class="col-sm-2 control-label">New Password</label>
+						<div class="col-sm-10"><input type="password" class="form-control" ng-model="newpassword" required=""></div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div ng-class="{'form-group':true, 'has-error': renewPasswordError==true}"><label class="col-sm-2 control-label">Repeat New Password</label>
+						<div class="col-sm-10"><input type="password" class="form-control" ng-model="renewpassword" required=""></div>
+					</div>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</script>
+
+<script type="text/ng-template" id="changePhoto">
+	<div class="inmodal">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">Change Profile Picture</h4>
+		</div>
+		<form class="form-horizontal" name="form" role="form" ng-submit="uploadPhoto()">
+			<div class="modal-body">
+				
+					<div class="form-group"><label class="col-lg-2 control-label">File</label>
+						<div class="col-lg-10">
+							<input type="file" class="form-control" ngf-select="" ng-model="file" name="file" ngf-accept="'image/*'" required="">
+						</div>
+					</div>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</script>
